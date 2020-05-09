@@ -1,37 +1,31 @@
-from flask import Flask, session, render_template, request, redirect, g, url_for
+from flask import Flask,request,render_template,session
 import os
 
-app = Flask(__name__, template_folder='template')
+app = Flask(__name__,template_folder='template')
+
 app.secret_key = os.urandom(24)
 
-@app.route('/', methods=['GET', 'post'])
-def index():
-    if request.method == 'post':
-        session.pop('user', None)
+@app.route('/')
+def hello_world():
+    return render_template("login.html")
+database={'utsav singh':'password','DUA':'123','GOYAL':'123'}
 
-        if request.form['password'] == 'password':
-            session['user'] = request.form['username']
-            return redirect(url_for('protected'))
-
-    return render_template('index.html')
-
-@app.route('/protected')
-def protected():
-    if g.user:
-        return render_template('protected.html',user=session['user'])
-    return redirect(url_for('index'))
-
-@app.before_request
-def before_request():
-
-    if 'user' in session:
-        g.user = session['user']   
+@app.route('/form_login',methods=['POST','GET'])
+def login():
+    name1=request.form['username']
+    password=request.form['password']
+    if name1 not in database:
+	    return render_template('login.html',info='Invalid User')
+    else:
+        if database[name1]!=passwords:
+            return render_template('login.html',info='Invalid Password')
+        else:
+	         return render_template('home.html',name=name1)
 
 @app.route('/dropsession')
 def dropsession():
     session.pop('user', None)
-    return render_template('index.html')             
-
+    return render_template('login.html')             
 
 if __name__ == '__main__':
     app.run(debug=True)
