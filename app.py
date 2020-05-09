@@ -17,7 +17,7 @@ def login():
     if name1 not in database:
 	    return render_template('login.html',info='Invalid User')
     else:
-        if database[name1]!=passwords:
+        if database[name1]!=password:
             return render_template('login.html',info='Invalid Password')
         else:
 	         return render_template('home.html',name=name1)
